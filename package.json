@@ -1,0 +1,32 @@
+{
+  "name": "educore",
+  "version": "1.0.0",
+  "description": "EduCore - Comprehensive K-12 School Management System",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:backend": "npm run dev --workspace=backend",
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "build": "npm run build --workspace=backend && npm run build --workspace=frontend",
+    "test": "npm run test --workspace=backend && npm run test --workspace=frontend",
+    "lint": "npm run lint --workspace=backend && npm run lint --workspace=frontend",
+    "setup": "npm install && npm run setup:backend && npm run setup:frontend",
+    "setup:backend": "npm run setup --workspace=backend",
+    "setup:frontend": "npm run setup --workspace=frontend"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^15.2.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  },
+  "author": "EduCore Development Team",
+  "license": "MIT"
+}
