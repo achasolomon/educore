@@ -2,6 +2,7 @@
 node_modules/
 */node_modules/
 
+
 # Production builds
 .next/
 */build/
@@ -16,7 +17,9 @@ node_modules/
 */.env
 */.env.local
 */.env.production
-
+*/.env.example
+.env.example
+.env.local.example
 # Logs
 logs/
 *.log
@@ -64,3 +67,6 @@ coverage/
 
 # Redis dump
 dump.rdb
+
+# Node modules
+node_modules/
