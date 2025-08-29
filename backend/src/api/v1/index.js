@@ -8,6 +8,10 @@ const userRoutes = require('../../modules/auth/routes/userRoutes');
 const schoolRoutes = require('../../modules/settings/routes/schoolRoutes');
 const studentRoutes = require('../../modules/students/routes/studentRoutes');
 const academicRoutes = require('../../modules/academics/routes/academicRoutes');
+const assessmentRoutes = require('../../modules/academics/routes/assessmentRoutes');
+const resultRoutes = require('../../modules/academics/routes/resultRoutes');
+const scratchCardRoutes = require('../../modules/academics/routes/scratchCardRoutes');
+
 
 // console.log('Type of authRoutes:', typeof authRoutes);
 // console.log('authRoutes:', authRoutes);
@@ -18,6 +22,9 @@ router.use('/users', userRoutes);
 router.use('/school', schoolRoutes);
 router.use('/students', studentRoutes);
 router.use('/academics', academicRoutes);
+router.use('/assessments', assessmentRoutes);
+router.use('/results', resultRoutes);
+router.use('/scratch-cards', scratchCardRoutes);
 
 
 // API status endpoint

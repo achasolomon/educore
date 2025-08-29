@@ -1,3 +1,4 @@
+// backend/src/core/database/seeders/002_demo_school.js
 const crypto = require('crypto');
 const bcrypt = require('bcryptjs');
 
@@ -32,7 +33,7 @@ exports.seed = async function(knex) {
 
   // Create demo school
   const [school] = await knex('schools').insert({
-    id: crypto.randomUUID(), // Use crypto instead of knex.raw
+    id: crypto.randomUUID(),
     name: 'Demo High School',
     code: 'DEMO001',
     email: 'admin@demohighschool.edu.ng',
@@ -55,7 +56,7 @@ exports.seed = async function(knex) {
 
   const users = [
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       school_id: school.id,
       email: 'admin@demohighschool.edu.ng',
       password_hash: adminPassword,
@@ -66,7 +67,7 @@ exports.seed = async function(knex) {
       email_verified_at: new Date()
     },
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       school_id: school.id,
       email: 'teacher1@demohighschool.edu.ng',
       password_hash: teacherPassword,
@@ -77,7 +78,7 @@ exports.seed = async function(knex) {
       email_verified_at: new Date()
     },
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       school_id: school.id,
       email: 'teacher2@demohighschool.edu.ng',
       password_hash: teacherPassword,
@@ -118,7 +119,7 @@ exports.seed = async function(knex) {
 
   // Create academic year
   const [academicYear] = await knex('academic_years').insert({
-    id: crypto.randomUUID(), // Use crypto
+    id: crypto.randomUUID(),
     school_id: school.id,
     name: '2024/2025',
     start_date: '2024-09-01',
@@ -130,7 +131,7 @@ exports.seed = async function(knex) {
   // Create terms
   await knex('terms').insert([
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       academic_year_id: academicYear.id,
       name: 'First Term',
       term_number: 1,
@@ -139,7 +140,7 @@ exports.seed = async function(knex) {
       is_current: true
     },
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       academic_year_id: academicYear.id,
       name: 'Second Term',
       term_number: 2,
@@ -148,7 +149,7 @@ exports.seed = async function(knex) {
       is_current: false
     },
     {
-      id: crypto.randomUUID(), // Use crypto
+      id: crypto.randomUUID(),
       academic_year_id: academicYear.id,
       name: 'Third Term',
       term_number: 3,
@@ -158,12 +159,16 @@ exports.seed = async function(knex) {
     }
   ]);
 
-  // Create subjects and classes with crypto UUIDs
+  // Create subjects - ENHANCED with more subjects
   const subjectInserts = [
     { name: 'Mathematics', code: 'MTH', category: 'core' },
     { name: 'English Language', code: 'ENG', category: 'core' },
     { name: 'Physics', code: 'PHY', category: 'core' },
-    { name: 'Chemistry', code: 'CHE', category: 'core' }
+    { name: 'Chemistry', code: 'CHE', category: 'core' },
+    { name: 'Biology', code: 'BIO', category: 'core' },
+    { name: 'Geography', code: 'GEO', category: 'elective' },
+    { name: 'Economics', code: 'ECO', category: 'elective' },
+    { name: 'Computer Science', code: 'COM', category: 'elective' }
   ].map(subject => ({
     id: crypto.randomUUID(),
     school_id: school.id,
@@ -172,11 +177,16 @@ exports.seed = async function(knex) {
 
   await knex('subjects').insert(subjectInserts);
 
+  // Create classes - ENHANCED with more classes
   const mathTeacher = insertedUsers.find(u => u.last_name === 'Mathematics');
+  const regularTeacher = insertedUsers.find(u => u.last_name === 'Teacher');
+  
   const classInserts = [
     { name: 'JSS 1A', level: 'JSS 1', section: 'A', class_teacher_id: mathTeacher.id },
-    { name: 'JSS 1B', level: 'JSS 1', section: 'B', class_teacher_id: null },
-    { name: 'JSS 2A', level: 'JSS 2', section: 'A', class_teacher_id: null }
+    { name: 'JSS 1B', level: 'JSS 1', section: 'B', class_teacher_id: regularTeacher.id },
+    { name: 'JSS 2A', level: 'JSS 2', section: 'A', class_teacher_id: null },
+    { name: 'JSS 3A', level: 'JSS 3', section: 'A', class_teacher_id: null },
+    { name: 'SSS 1A', level: 'SSS 1', section: 'A', class_teacher_id: null }
   ].map(cls => ({
     id: crypto.randomUUID(),
     school_id: school.id,
@@ -185,7 +195,48 @@ exports.seed = async function(knex) {
 
   await knex('classes').insert(classInserts);
 
+  // Create some demo students
+  const jss1aClass = await knex('classes')
+    .where({ school_id: school.id, name: 'JSS 1A' })
+    .first();
+
+  const studentInserts = [
+    {
+      id: crypto.randomUUID(),
+      school_id: school.id,
+      class_id: jss1aClass.id,
+      student_id: 'DEMO001/2024/001',
+      admission_number: 'DEMO001/2024/001',
+      first_name: 'Alice',
+      last_name: 'Johnson',
+      date_of_birth: '2010-03-15',
+      gender: 'female',
+      address: '456 Student Street, Lagos',
+      admission_date: '2024-09-01',
+      status: 'active'
+    },
+    {
+      id: crypto.randomUUID(),
+      school_id: school.id,
+      class_id: jss1aClass.id,
+      student_id: 'DEMO001/2024/002',
+      admission_number: 'DEMO001/2024/002',
+      first_name: 'Bob',
+      last_name: 'Smith',
+      date_of_birth: '2010-07-22',
+      gender: 'male',
+      address: '789 Learner Lane, Lagos',
+      admission_date: '2024-09-01',
+      status: 'active'
+    }
+  ];
+
+  await knex('students').insert(studentInserts);
+
   console.log('Demo school created successfully!');
   console.log('School Admin: admin@demohighschool.edu.ng / admin123');
-  console.log('Teacher: teacher1@demohighschool.edu.ng / teacher123');
+  console.log('Teacher 1: teacher1@demohighschool.edu.ng / teacher123');
+  console.log('Teacher 2: teacher2@demohighschool.edu.ng / teacher123');
+  console.log('Created 5 classes, 8 subjects, and 2 demo students');
+  console.log('Academic year 2024/2025 with 3 terms created');
 };

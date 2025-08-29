@@ -1,6 +1,5 @@
 // backend/src/core/database/seeders/001_roles_permissions.js
 const crypto = require('crypto');
-const bcrypt = require('bcryptjs');
 
 exports.seed = async function (knex) {
   // Clear existing entries
@@ -9,10 +8,10 @@ exports.seed = async function (knex) {
   await knex('permissions').del();
   await knex('roles').del();
 
-  // Insert roles
+  // Insert roles - ALL using crypto.randomUUID()
   const roles = [
     {
-      id: knex.raw('gen_random_uuid()'),
+      id: crypto.randomUUID(),
       name: 'super_admin',
       display_name: 'Super Administrator',
       description: 'System-wide administrator with full access',
@@ -20,7 +19,7 @@ exports.seed = async function (knex) {
       is_system_role: true
     },
     {
-      id: knex.raw('gen_random_uuid()'),
+      id: crypto.randomUUID(),
       name: 'school_admin',
       display_name: 'School Administrator',
       description: 'Administrator for a specific school',
@@ -28,7 +27,7 @@ exports.seed = async function (knex) {
       is_system_role: false
     },
     {
-      id: knex.raw('gen_random_uuid()'),
+      id: crypto.randomUUID(),
       name: 'teacher',
       display_name: 'Teacher',
       description: 'Teaching staff member',
@@ -36,7 +35,7 @@ exports.seed = async function (knex) {
       is_system_role: false
     },
     {
-      id: knex.raw('gen_random_uuid()'),
+      id: crypto.randomUUID(),
       name: 'parent',
       display_name: 'Parent/Guardian',
       description: 'Student parent or guardian',
@@ -44,7 +43,7 @@ exports.seed = async function (knex) {
       is_system_role: false
     },
     {
-      id: knex.raw('gen_random_uuid()'),
+      id: crypto.randomUUID(),
       name: 'student',
       display_name: 'Student',
       description: 'Enrolled student',
@@ -55,50 +54,50 @@ exports.seed = async function (knex) {
 
   await knex('roles').insert(roles);
 
-  // Insert permissions
- const permissions = [
-  // User management
-  { id: crypto.randomUUID(), name: 'users:create', resource: 'users', action: 'create', description: 'Create new users' },
-  { id: crypto.randomUUID(), name: 'users:read', resource: 'users', action: 'read', description: 'View user information' },
-  { id: crypto.randomUUID(), name: 'users:update', resource: 'users', action: 'update', description: 'Update user information' },
-  { id: crypto.randomUUID(), name: 'users:delete', resource: 'users', action: 'delete', description: 'Delete users' },
+  // Insert permissions - ALL using crypto.randomUUID()
+  const permissions = [
+    // User management
+    { id: crypto.randomUUID(), name: 'users:create', resource: 'users', action: 'create', description: 'Create new users' },
+    { id: crypto.randomUUID(), name: 'users:read', resource: 'users', action: 'read', description: 'View user information' },
+    { id: crypto.randomUUID(), name: 'users:update', resource: 'users', action: 'update', description: 'Update user information' },
+    { id: crypto.randomUUID(), name: 'users:delete', resource: 'users', action: 'delete', description: 'Delete users' },
 
-  // Student management
-  { id: crypto.randomUUID(), name: 'students:create', resource: 'students', action: 'create', description: 'Add new students' },
-  { id: crypto.randomUUID(), name: 'students:read', resource: 'students', action: 'read', description: 'View student information' },
-  { id: crypto.randomUUID(), name: 'students:update', resource: 'students', action: 'update', description: 'Update student information' },
-  { id: crypto.randomUUID(), name: 'students:delete', resource: 'students', action: 'delete', description: 'Remove students' },
+    // Student management
+    { id: crypto.randomUUID(), name: 'students:create', resource: 'students', action: 'create', description: 'Add new students' },
+    { id: crypto.randomUUID(), name: 'students:read', resource: 'students', action: 'read', description: 'View student information' },
+    { id: crypto.randomUUID(), name: 'students:update', resource: 'students', action: 'update', description: 'Update student information' },
+    { id: crypto.randomUUID(), name: 'students:delete', resource: 'students', action: 'delete', description: 'Remove students' },
 
-  // Class management (only define once)
-  { id: crypto.randomUUID(), name: 'classes:create', resource: 'classes', action: 'create', description: 'Create classes' },
-  { id: crypto.randomUUID(), name: 'classes:read', resource: 'classes', action: 'read', description: 'View classes' },
-  { id: crypto.randomUUID(), name: 'classes:update', resource: 'classes', action: 'update', description: 'Update classes' },
-  { id: crypto.randomUUID(), name: 'classes:delete', resource: 'classes', action: 'delete', description: 'Delete classes' },
+    // Class management
+    { id: crypto.randomUUID(), name: 'classes:create', resource: 'classes', action: 'create', description: 'Create classes' },
+    { id: crypto.randomUUID(), name: 'classes:read', resource: 'classes', action: 'read', description: 'View classes' },
+    { id: crypto.randomUUID(), name: 'classes:update', resource: 'classes', action: 'update', description: 'Update classes' },
+    { id: crypto.randomUUID(), name: 'classes:delete', resource: 'classes', action: 'delete', description: 'Delete classes' },
 
-  // Subject management
-  { id: crypto.randomUUID(), name: 'subjects:create', resource: 'subjects', action: 'create', description: 'Create subjects' },
-  { id: crypto.randomUUID(), name: 'subjects:read', resource: 'subjects', action: 'read', description: 'View subjects' },
-  { id: crypto.randomUUID(), name: 'subjects:update', resource: 'subjects', action: 'update', description: 'Update subjects' },
-  { id: crypto.randomUUID(), name: 'subjects:delete', resource: 'subjects', action: 'delete', description: 'Delete subjects' },
+    // Subject management
+    { id: crypto.randomUUID(), name: 'subjects:create', resource: 'subjects', action: 'create', description: 'Create subjects' },
+    { id: crypto.randomUUID(), name: 'subjects:read', resource: 'subjects', action: 'read', description: 'View subjects' },
+    { id: crypto.randomUUID(), name: 'subjects:update', resource: 'subjects', action: 'update', description: 'Update subjects' },
+    { id: crypto.randomUUID(), name: 'subjects:delete', resource: 'subjects', action: 'delete', description: 'Delete subjects' },
 
-  // Grades and assessments
-  { id: crypto.randomUUID(), name: 'grades:create', resource: 'grades', action: 'create', description: 'Enter grades' },
-  { id: crypto.randomUUID(), name: 'grades:read', resource: 'grades', action: 'read', description: 'View grades' },
-  { id: crypto.randomUUID(), name: 'grades:update', resource: 'grades', action: 'update', description: 'Update grades' },
-  { id: crypto.randomUUID(), name: 'grades:delete', resource: 'grades', action: 'delete', description: 'Delete grades' },
+    // Grades and assessments
+    { id: crypto.randomUUID(), name: 'grades:create', resource: 'grades', action: 'create', description: 'Enter grades' },
+    { id: crypto.randomUUID(), name: 'grades:read', resource: 'grades', action: 'read', description: 'View grades' },
+    { id: crypto.randomUUID(), name: 'grades:update', resource: 'grades', action: 'update', description: 'Update grades' },
+    { id: crypto.randomUUID(), name: 'grades:delete', resource: 'grades', action: 'delete', description: 'Delete grades' },
 
-  // Reports
-  { id: crypto.randomUUID(), name: 'reports:generate', resource: 'reports', action: 'generate', description: 'Generate reports' },
-  { id: crypto.randomUUID(), name: 'reports:view', resource: 'reports', action: 'view', description: 'View reports' },
+    // Reports
+    { id: crypto.randomUUID(), name: 'reports:generate', resource: 'reports', action: 'generate', description: 'Generate reports' },
+    { id: crypto.randomUUID(), name: 'reports:view', resource: 'reports', action: 'view', description: 'View reports' },
 
-  // School management
-  { id: crypto.randomUUID(), name: 'school:manage', resource: 'school', action: 'manage', description: 'Manage school settings' },
-  { id: crypto.randomUUID(), name: 'school:view', resource: 'school', action: 'view', description: 'View school information' },
+    // School management
+    { id: crypto.randomUUID(), name: 'school:manage', resource: 'school', action: 'manage', description: 'Manage school settings' },
+    { id: crypto.randomUUID(), name: 'school:view', resource: 'school', action: 'view', description: 'View school information' },
 
-  // Finance
-  { id: crypto.randomUUID(), name: 'finance:manage', resource: 'finance', action: 'manage', description: 'Manage financial records' },
-  { id: crypto.randomUUID(), name: 'finance:view', resource: 'finance', action: 'view', description: 'View financial information' }
-];
+    // Finance
+    { id: crypto.randomUUID(), name: 'finance:manage', resource: 'finance', action: 'manage', description: 'Manage financial records' },
+    { id: crypto.randomUUID(), name: 'finance:view', resource: 'finance', action: 'view', description: 'View financial information' }
+  ];
 
   await knex('permissions').insert(permissions);
 
@@ -118,13 +117,14 @@ exports.seed = async function (knex) {
     });
   });
 
-  // School Admin - Most permissions except system-wide ones
+  // School Admin - FIXED: Added missing permissions
   const schoolAdminRole = insertedRoles.find(r => r.name === 'school_admin');
   const schoolAdminPermissions = [
     'users:create', 'users:read', 'users:update', 'users:delete',
     'students:create', 'students:read', 'students:update', 'students:delete',
     'classes:create', 'classes:read', 'classes:update', 'classes:delete',
-    'grades:read', 'grades:update',
+    'subjects:create', 'subjects:read', 'subjects:update', 'subjects:delete', // ADDED
+    'grades:create', 'grades:read', 'grades:update', 'grades:delete',        // ADDED grades:create
     'reports:generate', 'reports:view',
     'school:manage', 'school:view',
     'finance:manage', 'finance:view'
@@ -139,11 +139,12 @@ exports.seed = async function (knex) {
     }
   });
 
-  // Teacher - Academic and student-related permissions
+  // Teacher - FIXED: Added subjects permissions
   const teacherRole = insertedRoles.find(r => r.name === 'teacher');
   const teacherPermissions = [
     'students:read',
     'classes:read',
+    'subjects:read', // ADDED
     'grades:create', 'grades:read', 'grades:update',
     'reports:view',
     'school:view'
@@ -193,4 +194,8 @@ exports.seed = async function (knex) {
   });
 
   await knex('role_permissions').insert(rolePermissionMappings);
+
+  console.log('Roles and permissions seeded successfully');
+  console.log('School admin now has grades:create and subjects permissions');
+  console.log('Teachers have subjects:read permission');
 };
