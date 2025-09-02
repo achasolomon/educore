@@ -14,6 +14,7 @@ const scratchCardRoutes = require('../../modules/academics/routes/scratchCardRou
 const reportRoutes = require('../../modules/reports/routes/reportRoutes');
 const analyticsRoutes = require('../../modules/analytics/routes/analyticsRoutes');
 const communicationRoutes = require('../../modules/communication/routes/communicationRoutes');
+const staffRoutes = require('../../modules/staff/routes/staffRoutes');
 
 // console.log('Type of authRoutes:', typeof authRoutes);
 // console.log('authRoutes:', authRoutes);
@@ -30,6 +31,7 @@ router.use('/scratch-cards', scratchCardRoutes);
 router.use('/reports', reportRoutes);
 router.use('/analytics', analyticsRoutes);
 router.use('/communication', communicationRoutes);
+router.use('/staff', staffRoutes);
 
 // API status endpoint
 router.get('/status', (req, res) => {
