@@ -1,4 +1,5 @@
 // backend/src/modules/staff/controllers/staffCategoryController.js
+
 class StaffCategoryController {
   // Get all staff categories
   static async getAllCategories(req, res) {

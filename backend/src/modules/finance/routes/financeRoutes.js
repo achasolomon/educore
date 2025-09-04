@@ -515,16 +515,16 @@ router.get('/summary',
   FinancialDashboardController.getFinancialSummary
 );
 
-/**
- * @route   POST /api/finance/reports/custom
- * @desc    Generate custom financial report
- * @access  Private (Admin, Finance, Principal)
- */
-router.post('/reports/custom',
-  rbac.requirePermission('finance:analytics'),
-  FinanceValidators.validateCustomReport,
-  FinancialDashboardController.generateCustomReport
-);
+// /**
+//  * @route   POST /api/finance/reports/custom
+//  * @desc    Generate custom financial report
+//  * @access  Private (Admin, Finance, Principal)
+//  */
+// router.post('/reports/custom',
+//   rbac.requirePermission('finance:analytics'),
+//   FinanceValidators.validateCustomReport,
+//   FinancialDashboardController.generateCustomReport
+// );
 
 // ===== BUDGET MANAGEMENT ROUTES =====
 

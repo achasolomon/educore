@@ -16,6 +16,8 @@ const analyticsRoutes = require('../../modules/analytics/routes/analyticsRoutes'
 const communicationRoutes = require('../../modules/communication/routes/communicationRoutes');
 const staffRoutes = require('../../modules/staff/routes/staffRoutes');
 const financeRoutes = require('../../modules/finance/routes/financeRoutes');
+const transportRoutes = require('../../modules/transport/routes/transportRoutes');
+const libraryRoutes = require('../../modules/libray/routes');
 
 // console.log('Type of authRoutes:', typeof authRoutes);
 // console.log('authRoutes:', authRoutes);
@@ -34,6 +36,8 @@ router.use('/analytics', analyticsRoutes);
 router.use('/communication', communicationRoutes);
 router.use('/staff', staffRoutes);
 router.use('/finance', financeRoutes);
+router.use('/transport', transportRoutes);
+router.use('/library', libraryRoutes);
 
 // API status endpoint
 router.get('/status', (req, res) => {
