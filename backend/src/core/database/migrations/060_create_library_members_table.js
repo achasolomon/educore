@@ -13,7 +13,7 @@ exports.up = function(knex) {
     table.enum('member_type', ['student', 'teacher', 'staff', 'parent', 'external']).notNullable();
     
     // Member details
-    table.string('class_id').references('id').inTable('classes').onDelete('SET NULL');
+    table.uuid('class_id').references('id').inTable('classes').onDelete('SET NULL');
     table.string('department');
     table.string('designation');
     
