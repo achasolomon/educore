@@ -1,7 +1,8 @@
 // backend/src/modules/library/routes/bookRoutes.js
 const express = require('express');
-const router = express.Router();
-const { BookController } = require('../controllers/bookController');
+const Router = express.Router();
+
+const BookController  = require('../controllers/bookController');
 const {
   createBookValidator,
   searchBooksValidator,
@@ -9,11 +10,11 @@ const {
 } = require('../validators/bookValidators');
 const { paramIdValidator } = require('../validators/transactionValidators');
 const authMiddleware = require('../../../core/middleware/auth');
-const rbac = require('../../../core/middleware/role');
+const rbac = require('../../../core/middleware/rbac');
 
 
 // Create a new book (librarian only)
-router.post('/',
+Router.post('/',
   authMiddleware,
   rbac.requireRole(['librarian', 'admin']),
   createBookValidator,
@@ -21,35 +22,38 @@ router.post('/',
 );
 
 // Get all books for school with filters
-router.get('/',
+Router.get('/',
   authMiddleware,
   BookController.getBooks
 );
 
 // Search books with advanced filters
-router.get('/search',
+Router.get('/search',
   authMiddleware,
   searchBooksValidator,
   BookController.searchBooks
 );
 
 // Get book recommendations for a member
-router.get('/recommendations/:memberId?',
+Router.get('/recommendations/:memberId?',
   authMiddleware,
   BookController.getRecommendations
 );
 
 // Get a specific book by ID
-router.get('/:id',
+Router.get('/:id',
   authMiddleware,
   paramIdValidator,
   BookController.getBookById
 );
 
 // Update book status (librarian only)
-router.patch('/:id/status',
+Router.patch('/:id/status',
   authMiddleware,
   rbac.requireRole(['librarian', 'admin']),
   updateBookStatusValidator,
   BookController.updateBookStatus
 );
+
+module.exports = Router
+;

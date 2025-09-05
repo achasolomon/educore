@@ -1,4 +1,6 @@
 // backend/src/modules/library/validators/memberValidators.js
+const { body, param } = require('express-validator');
+
 const createMemberValidator = [
   body('user_id')
     .notEmpty()

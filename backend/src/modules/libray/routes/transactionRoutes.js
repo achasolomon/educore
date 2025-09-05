@@ -1,5 +1,6 @@
 // backend/src/modules/library/routes/transactionRoutes.js
-const transactionRouter = express.Router();
+const express = require('express');
+const Router = express.Router();
 const TransactionController = require('../controllers/transactionController');
 const {
   checkoutBookValidator,
@@ -9,10 +10,10 @@ const {
 } = require('../validators/transactionValidators');
 
 const authMiddleware = require('../../../core/middleware/auth');
-const rbac = require('../../../core/middleware/role');
+const rbac = require('../../../core/middleware/rbac');
 
 // Checkout a book (librarian only)
-transactionRouter.post('/checkout',
+Router.post('/checkout',
   authMiddleware,
   rbac.requireRole(['librarian', 'admin']),
   checkoutBookValidator,
@@ -20,7 +21,7 @@ transactionRouter.post('/checkout',
 );
 
 // Return a book (librarian only)
-transactionRouter.post('/return',
+Router.post('/return',
   authMiddleware,
   rbac.requireRole(['librarian', 'admin']),
   returnBookValidator,
@@ -28,29 +29,31 @@ transactionRouter.post('/return',
 );
 
 // Renew a book (member or librarian)
-transactionRouter.post('/renew',
+Router.post('/renew',
   authMiddleware,
   renewBookValidator,
   TransactionController.renewBook
 );
 
 // Reserve a book (member or librarian)
-transactionRouter.post('/reserve',
+Router.post('/reserve',
   authMiddleware,
   reserveBookValidator,
   TransactionController.reserveBook
 );
 
 // Get overdue books (librarian only)
-transactionRouter.get('/overdue',
+Router.get('/overdue',
   authMiddleware,
-  roleMiddleware(['librarian', 'admin']),
+  rbac.requireRole(['librarian', 'admin']),
   TransactionController.getOverdueBooks
 );
 
 // Get library statistics (librarian only)
-transactionRouter.get('/statistics',
+Router.get('/statistics',
   authMiddleware,
-  roleMiddleware(['librarian', 'admin']),
+  rbac.requireRole(['librarian', 'admin']),
   TransactionController.getLibraryStatistics
 );
+
+module.exports = Router;

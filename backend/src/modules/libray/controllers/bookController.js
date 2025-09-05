@@ -3,7 +3,9 @@ const Book = require('../models/Book');
 const LibraryService = require('../services/libraryService');
 const { validationResult } = require('express-validator');
 const logger = require('../../../core/utils/logger');
-const { successResponse, errorResponse } = require('../../../core/utils/responseHelpers');
+const  errorHandler = require('../../../core/middleware/errorHandler');
+const successHandler = require('../../../core/middleware/successHandler');
+
 
 class BookController {
   
@@ -11,16 +13,16 @@ class BookController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const book = await Book.create(req.body, req.user.school_id);
       logger.info(`Book created: ${book.id}`, { user_id: req.user.id });
-      
-      return successResponse(res, 'Book created successfully', book, 201);
+
+      return successHandler(res, 'Book created successfully', book, 201);
     } catch (error) {
       logger.error('Book creation failed:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -34,11 +36,11 @@ class BookController {
       };
 
       const books = await Book.findBySchool(req.user.school_id, filters);
-      
-      return successResponse(res, 'Books retrieved successfully', books);
+
+      return successHandler(res, 'Books retrieved successfully', books);
     } catch (error) {
       logger.error('Failed to retrieve books:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -47,13 +49,13 @@ class BookController {
       const book = await Book.findById(req.params.id, req.user.school_id);
       
       if (!book) {
-        return errorResponse(res, 'Book not found', 404);
+        return errorHandler(res, 'Book not found', 404);
       }
 
-      return successResponse(res, 'Book retrieved successfully', book);
+      return successHandler(res, 'Book retrieved successfully', book);
     } catch (error) {
       logger.error('Failed to retrieve book:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -61,7 +63,7 @@ class BookController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const searchParams = {
@@ -78,15 +80,15 @@ class BookController {
       };
 
       const books = await Book.searchBooks(req.user.school_id, searchParams);
-      
-      return successResponse(res, 'Search completed successfully', {
+
+      return successHandler(res, 'Search completed successfully', {
         books,
         total: books.length,
         filters: searchParams
       });
     } catch (error) {
       logger.error('Book search failed:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -97,11 +99,11 @@ class BookController {
 
       const libraryService = new LibraryService();
       const recommendations = await libraryService.getMemberRecommendations(memberId, limit);
-      
-      return successResponse(res, 'Recommendations retrieved successfully', recommendations);
+
+      return successHandler(res, 'Recommendations retrieved successfully', recommendations);
     } catch (error) {
       logger.error('Failed to get recommendations:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -109,7 +111,7 @@ class BookController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const book = await Book.updateAvailabilityStatus(
@@ -119,17 +121,18 @@ class BookController {
       );
 
       if (!book) {
-        return errorResponse(res, 'Book not found', 404);
+        return errorHandler(res, 'Book not found', 404);
       }
 
       logger.info(`Book status updated: ${book.id} to ${req.body.status}`, { 
         user_id: req.user.id 
       });
-      
-      return successResponse(res, 'Book status updated successfully', book);
+
+      return successHandler(res, 'Book status updated successfully', book);
     } catch (error) {
       logger.error('Book status update failed:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 }
+module.exports = new BookController();

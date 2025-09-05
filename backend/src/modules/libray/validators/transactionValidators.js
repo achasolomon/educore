@@ -1,4 +1,5 @@
 // backend/src/modules/library/validators/transactionValidators.js
+const { body, param } = require('express-validator');
 const checkoutBookValidator = [
   body('book_id')
     .notEmpty()

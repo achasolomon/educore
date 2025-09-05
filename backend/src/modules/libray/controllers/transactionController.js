@@ -3,7 +3,8 @@ const LibraryService = require('../services/libraryService');
 const BookTransaction = require('../models/BookTransaction');
 const { validationResult } = require('express-validator');
 const logger = require('../../../core/utils/logger');
-const { successResponse, errorResponse } = require('../../../core/utils/responseHelpers');
+const  errorHandler = require('../../../core/middleware/errorHandler');
+const successHandler = require('../../../core/middleware/successHandler');
 
 class TransactionController {
   
@@ -11,7 +12,7 @@ class TransactionController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const libraryService = new LibraryService();
@@ -22,10 +23,10 @@ class TransactionController {
         req.body.is_digital || false
       );
       
-      return successResponse(res, 'Book checked out successfully', transaction, 201);
+      return successHandler(res, 'Book checked out successfully', transaction, 201);
     } catch (error) {
       logger.error('Book checkout failed:', error);
-      return errorResponse(res, error.message, 400);
+      return errorHandler(res, error.message, 400);
     }
   }
 
@@ -33,7 +34,7 @@ class TransactionController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const libraryService = new LibraryService();
@@ -45,10 +46,10 @@ class TransactionController {
         req.body.notes || ''
       );
       
-      return successResponse(res, 'Book returned successfully', transaction);
+      return successHandler(res, 'Book returned successfully', transaction);
     } catch (error) {
       logger.error('Book return failed:', error);
-      return errorResponse(res, error.message, 400);
+      return errorHandler(res, error.message, 400);
     }
   }
 
@@ -56,7 +57,7 @@ class TransactionController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const libraryService = new LibraryService();
@@ -65,10 +66,10 @@ class TransactionController {
         req.body.member_id
       );
       
-      return successResponse(res, 'Book renewed successfully', transaction);
+      return successHandler(res, 'Book renewed successfully', transaction);
     } catch (error) {
       logger.error('Book renewal failed:', error);
-      return errorResponse(res, error.message, 400);
+      return errorHandler(res, error.message, 400);
     }
   }
 
@@ -76,7 +77,7 @@ class TransactionController {
     try {
       const errors = validationResult(req);
       if (!errors.isEmpty()) {
-        return errorResponse(res, 'Validation failed', 400, errors.array());
+        return errorHandler(res, 'Validation failed', 400, errors.array());
       }
 
       const libraryService = new LibraryService();
@@ -85,10 +86,10 @@ class TransactionController {
         req.body.member_id
       );
       
-      return successResponse(res, 'Book reserved successfully', reservation, 201);
+      return successHandler(res, 'Book reserved successfully', reservation, 201);
     } catch (error) {
       logger.error('Book reservation failed:', error);
-      return errorResponse(res, error.message, 400);
+      return errorHandler(res, error.message, 400);
     }
   }
 
@@ -96,10 +97,10 @@ class TransactionController {
     try {
       const overdueTransactions = await BookTransaction.findOverdueTransactions(req.user.school_id);
       
-      return successResponse(res, 'Overdue books retrieved successfully', overdueTransactions);
+      return successHandler(res, 'Overdue books retrieved successfully', overdueTransactions);
     } catch (error) {
       logger.error('Failed to retrieve overdue books:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 
@@ -108,16 +109,12 @@ class TransactionController {
       const libraryService = new LibraryService();
       const stats = await libraryService.getLibraryStatistics(req.user.school_id);
       
-      return successResponse(res, 'Library statistics retrieved successfully', stats);
+      return successHandler(res, 'Library statistics retrieved successfully', stats);
     } catch (error) {
       logger.error('Failed to retrieve library statistics:', error);
-      return errorResponse(res, error.message, 500);
+      return errorHandler(res, error.message, 500);
     }
   }
 }
 
-module.exports = {
-  BookController: new BookController(),
-  MemberController: new MemberController(),
-  TransactionController: new TransactionController()
-};
+module.exports = new TransactionController();

@@ -1,4 +1,3 @@
-
 // backend/src/modules/transport/controllers/routeController.js
 const VehicleRoutes = require('../models/Route');
 const logger = require('../../../core/utils/logger');
@@ -119,8 +118,6 @@ class RouteController {
     }
   }
 
- 
-
   // Complete maintenance record
   static async completeMaintenance(req, res) {
     try {
@@ -189,8 +186,6 @@ class RouteController {
       });
     }
   }
-
-// Complete missing methods in RouteController
 
   // Update route
   static async updateRoute(req, res) {
@@ -381,4 +376,4 @@ class RouteController {
     }
   }
 }
-export default RouteController;
+module.exports = RouteController;

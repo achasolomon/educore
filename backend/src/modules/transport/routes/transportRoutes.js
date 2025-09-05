@@ -1,6 +1,8 @@
 // backend/src/modules/transport/routes/transportRoutes.js
 const express = require('express');
 const router = express.Router();
+const { body } = require('express-validator');
+
 
 // Controllers
 const VehicleController = require('../controllers/vehicleController');
@@ -28,7 +30,7 @@ router.use(auth);
  * @access  Private (Admin, Transport Manager)
  */
 router.post('/vehicles',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.createVehicle,
   VehicleController.createVehicle
 );
@@ -39,7 +41,7 @@ router.post('/vehicles',
  * @access  Private (Admin, Transport Manager, Drivers)
  */
 router.get('/vehicles',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
   VehicleController.getVehicles
 );
 
@@ -49,7 +51,7 @@ router.get('/vehicles',
  * @access  Private (Admin, Transport Manager, Drivers)
  */
 router.get('/vehicles/:vehicleId',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
   TransportValidators.uuidParam('vehicleId'),
   VehicleController.getVehicleById
 );
@@ -60,7 +62,7 @@ router.get('/vehicles/:vehicleId',
  * @access  Private (Admin, Transport Manager, Drivers)
  */
 router.patch('/vehicles/:vehicleId/location',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
   rateLimit({ windowMs: 60000, max: 100 }), // High rate limit for GPS updates
   TransportValidators.updateVehicleLocation,
   VehicleController.updateVehicleLocation
@@ -72,7 +74,7 @@ router.patch('/vehicles/:vehicleId/location',
  * @access  Private (Admin, Transport Manager)
  */
 router.patch('/vehicles/:vehicleId/status',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.updateVehicleStatus,
   VehicleController.updateVehicleStatus
 );
@@ -83,7 +85,7 @@ router.patch('/vehicles/:vehicleId/status',
  * @access  Private (Admin, Transport Manager)
  */
 router.post('/vehicles/:vehicleId/maintenance',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.scheduleMaintenance,
   VehicleController.scheduleMaintenance
 );
@@ -94,7 +96,7 @@ router.post('/vehicles/:vehicleId/maintenance',
  * @access  Private (Admin, Transport Manager, Drivers)
  */
 router.post('/vehicles/:vehicleId/fuel',
-  rbac(['admin', 'transport_manager', 'driver']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver']),
   TransportValidators.recordFuelConsumption,
   VehicleController.recordFuelConsumption
 );
@@ -105,7 +107,7 @@ router.post('/vehicles/:vehicleId/fuel',
  * @access  Private (Admin, Transport Manager)
  */
 router.get('/vehicles/statistics/summary',
-  rbac(['admin', 'transport_manager', 'principal']),
+  rbac.requireRole(['admin', 'transport_manager', 'principal']),
   TransportValidators.dateRangeQuery,
   VehicleController.getVehicleStatistics
 );
@@ -120,7 +122,7 @@ router.get('/vehicles/statistics/summary',
  * @access  Private (Admin, Transport Manager)
  */
 router.post('/routes',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.createRoute,
   RouteController.createRoute
 );
@@ -131,7 +133,7 @@ router.post('/routes',
  * @access  Private (Admin, Transport Manager, Teachers, Parents)
  */
 router.get('/routes',
-  rbac(['admin', 'transport_manager', 'teacher', 'parent', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'teacher', 'parent', 'driver', 'conductor']),
   RouteController.getRoutes
 );
 
@@ -140,11 +142,11 @@ router.get('/routes',
  * @desc    Get single route details
  * @access  Private (Admin, Transport Manager, Drivers)
  */
-router.get('/routes/:routeId',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
-  TransportValidators.uuidParam('routeId'),
-  RouteController.getRouteById
-);
+// router.get('/routes/:routeId',
+//   rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
+//   TransportValidators.uuidParam('routeId'),
+//   RouteController.getRouteById
+// );
 
 /**
  * @route   POST /api/transport/routes/:routeId/stops
@@ -152,7 +154,7 @@ router.get('/routes/:routeId',
  * @access  Private (Admin, Transport Manager)
  */
 router.post('/routes/:routeId/stops',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.addStopToRoute,
   RouteController.addStopToRoute
 );
@@ -162,11 +164,11 @@ router.post('/routes/:routeId/stops',
  * @desc    Optimize route for efficiency
  * @access  Private (Admin, Transport Manager)
  */
-router.put('/routes/:routeId/optimize',
-  rbac(['admin', 'transport_manager']),
-  TransportValidators.uuidParam('routeId'),
-  RouteController.optimizeRoute
-);
+// router.put('/routes/:routeId/optimize',
+//   rbac.requireRole(['admin', 'transport_manager']),
+//   TransportValidators.uuidParam('routeId'),
+//   RouteController.optimizeRoute
+// );
 
 // ==============================================
 // STUDENT TRANSPORT ROUTES
@@ -178,7 +180,7 @@ router.put('/routes/:routeId/optimize',
  * @access  Private (Admin, Transport Manager, Teachers)
  */
 router.post('/students/:studentId/enroll',
-  rbac(['admin', 'transport_manager', 'teacher']),
+  rbac.requireRole(['admin', 'transport_manager', 'teacher']),
   TransportValidators.enrollStudent,
   StudentTransportController.enrollStudent
 );
@@ -189,7 +191,7 @@ router.post('/students/:studentId/enroll',
  * @access  Private (Admin, Transport Manager, Drivers)
  */
 router.get('/routes/:routeId/students',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
   TransportValidators.getStudentsByRoute,
   StudentTransportController.getStudentsByRoute
 );
@@ -200,7 +202,7 @@ router.get('/routes/:routeId/students',
  * @access  Private (Admin, Transport Manager, Drivers, Conductors)
  */
 router.post('/students/:studentId/activity',
-  rbac(['admin', 'transport_manager', 'driver', 'conductor']),
+  rbac.requireRole(['admin', 'transport_manager', 'driver', 'conductor']),
   rateLimit({ windowMs: 60000, max: 200 }), // High limit for activity recording
   TransportValidators.recordBoardingActivity,
   StudentTransportController.recordBoardingActivity
@@ -212,7 +214,7 @@ router.post('/students/:studentId/activity',
  * @access  Private (Admin, Transport Manager, Teachers, Parents)
  */
 router.get('/students/:studentId/history',
-  rbac(['admin', 'transport_manager', 'teacher', 'parent']),
+  rbac.requireRole(['admin', 'transport_manager', 'teacher', 'parent']),
   TransportValidators.uuidParam('studentId'),
   StudentTransportController.getStudentTransportHistory
 );
@@ -223,7 +225,7 @@ router.get('/students/:studentId/history',
  * @access  Private (Admin, Transport Manager)
  */
 router.patch('/students/:studentId/suspend',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   TransportValidators.uuidParam('studentId'),
   StudentTransportController.suspendStudentTransport
 );
@@ -234,7 +236,7 @@ router.patch('/students/:studentId/suspend',
  * @access  Private (Admin, Transport Manager, Principal)
  */
 router.get('/statistics',
-  rbac(['admin', 'transport_manager', 'principal']),
+  rbac.requireRole(['admin', 'transport_manager', 'principal']),
   TransportValidators.getTransportStatistics,
   StudentTransportController.getTransportStatistics
 );
@@ -249,7 +251,7 @@ router.get('/statistics',
  * @access  Private (Admin, Transport Manager, Parents)
  */
 router.get('/tracking/live',
-  rbac(['admin', 'transport_manager', 'parent', 'teacher']),
+  rbac.requireRole(['admin', 'transport_manager', 'parent', 'teacher']),
   rateLimit({ windowMs: 60000, max: 60 }), // 1 request per second for real-time data
   async (req, res) => {
     try {
@@ -293,7 +295,7 @@ router.get('/tracking/live',
  * @access  Private (Admin, Transport Manager, Parents, Teachers)
  */
 router.get('/tracking/route/:routeId',
-  rbac(['admin', 'transport_manager', 'parent', 'teacher']),
+  rbac.requireRole(['admin', 'transport_manager', 'parent', 'teacher']),
   TransportValidators.uuidParam('routeId'),
   async (req, res) => {
     try {
@@ -354,7 +356,7 @@ router.get('/tracking/route/:routeId',
  * @access  Private (Admin, Transport Manager)
  */
 router.post('/notifications/broadcast',
-  rbac(['admin', 'transport_manager']),
+  rbac.requireRole(['admin', 'transport_manager']),
   [
     body('route_id')
       .isUUID()
