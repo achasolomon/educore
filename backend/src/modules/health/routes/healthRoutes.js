@@ -1,9 +1,9 @@
 const express = require('express');
 const HealthController = require('../controllers/healthController');
 const healthValidationRules = require('../validators/healthValidators');
-const authMiddleware =require('../../../core/middleware/authMiddleware');
+const authMiddleware =require('../../../core/middleware/auth');
 const rbac = require('../../../core/middleware/rbac');
-const { handleValidationErrors } = require('../../../core/middleware/validationMiddleware');
+const { handleValidationErrors } = require('../../../core/middleware/validation');
 
 const router = express.Router();
 

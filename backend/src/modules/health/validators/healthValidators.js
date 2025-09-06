@@ -1,6 +1,4 @@
-const { body, param, query, validationResult } = require('express-validator');
-const { sanitizeBody } = require('express-validator');
-const { handleValidationErrors, validateSchoolAccess } = require('../../../core/middleware/validationMiddleware');
+const { body, param, query } = require('express-validator');
 
 
 // Validation rules
